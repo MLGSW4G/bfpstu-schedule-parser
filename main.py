@@ -1,4 +1,3 @@
-"""The program searches for <tr class='reportitem'> webpage elements and displays them as a table"""
 import sys
 import os
 from json import load
@@ -8,23 +7,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
 
-# For PyInstaller
-def get_resource_path(relative_path):
-    if hasattr(sys, '_MEIPASS'):
-        base_path = sys._MEIPASS  # PyInstaller creates a temp folder and stores path in _MEIPASS
-    else:
-        base_path = os.path.abspath(".")  # If running the script directly, use the current directory
+def read_config():
+    try:
+        if getattr(sys, 'frozen', False):
+            application_path = os.path.dirname(sys.executable)
+        elif __file__:
+            application_path = os.path.dirname(os.path.abspath(__file__))
+        config_path = os.path.join(application_path, "config.json")
 
-    return os.path.join(base_path, relative_path)
+        with open(config_path, 'r', encoding='UTF-8') as file:
+            config = load(file)
 
-
-config_file_path = get_resource_path('config.json')
-
-
-def load_config(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        config = load(file)
-    return config
+        return config
+    except Exception as e:
+        print(f"Error reading config.json: {e}")
+        return None
 
 
 def create_dict_tr(tr):
@@ -91,7 +88,7 @@ def main():
 
 
 if __name__ == '__main__':
-    config = load_config(config_file_path)
+    config = read_config()
     os.system(config['window_size'])
     url = config['url']
     group = config['group']
