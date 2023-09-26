@@ -1,5 +1,18 @@
 {
     "window_size": "mode 150, 30",
-    "url": "http://raspisanie.bf.pstu.ru/RepRasp.asp",
-    "group": "ПОВТ-23д"
+    "date_from": "",
+    "date_to": "",
+    "headers" : [
+        "Дата",
+        "Начало", 
+        "Окончание", 
+        "Пара", 
+        "Группа", 
+        "Дисциплина", 
+        "Тип", 
+        "Ауд", 
+        "Преподаватель"
+    ],
+    "url": "http://raspisanie.bf.pstu.ru",
+    "group": ""
 }
