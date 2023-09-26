@@ -1,5 +1,6 @@
 {
-    "window_size": "mode 150, 30",
+	"headless_launch": true,
+    "window_size": "mode 160, 30",
     "date_from": "",
     "date_to": "",
     "headers" : [
