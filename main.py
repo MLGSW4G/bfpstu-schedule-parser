@@ -1,5 +1,6 @@
 import sys
 import os
+from datetime import datetime
 from json import load
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -36,7 +37,15 @@ def format_tr_data(tr_element):
             f'{discipline: <48}{lesson_type: <4}{room: <9}{teacher: <35}')
 
 
+def log_data(data, file=None):
+    if file:
+        file.write(data + "\n")
+    else:
+        print(data)
+
+
 def main():
+    file = None
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
@@ -80,11 +89,26 @@ def main():
     for tr_element in tr_elements_list:
         print(format_tr_data(tr_element))
 
+    if write_to_file:
+        filename = datetime.now().strftime("%Y-%m-%d") + ".txt"
+        file = open(filename, 'w')
+        log_data(
+            f'{headers[0]: <23}{headers[1]: <7}{headers[2]: <10}{headers[3]: <5}{headers[4]: <9}{headers[5]: <48}'
+            f'{headers[6]: <4}{headers[7]: <9}{headers[8]: <35}', file)  # Print or write table headers
+
+        #   Дата   Начало    Окончание   Пара    Группа    Дисциплина   Тип     Ауд     Преподаватель
+        for tr_element in tr_elements_list:
+            log_data(format_tr_data(tr_element), file)
+
+        if write_to_file:
+            file.close()
+
 
 if __name__ == '__main__':
     config = read_config()
     default_values = {
         "headless_launch": False,
+        "write_to_file": False,
         "window_size": "mode 160, 300",
         "date_from": "",
         "date_to": "",
@@ -105,6 +129,7 @@ if __name__ == '__main__':
 
     # Use default values if values from config file are empty
     headless_launch = config.get('headless_launch', default_values['headless_launch'])
+    write_to_file = config.get('write_to_file', default_values['write_to_file'])
     window_size = config.get('window_size', default_values['window_size']) or default_values['window_size']
     os.system(window_size)  # Apply the window size
     date_from = config.get('date_from', default_values['date_from']) or default_values['date_from']

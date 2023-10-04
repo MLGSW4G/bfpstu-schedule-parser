@@ -1,5 +1,6 @@
 {
 	"headless_launch": true,
+	"write_to_file": false,
     "window_size": "mode 160, 30",
     "date_from": "",
     "date_to": "",
